@@ -8,7 +8,7 @@ var casper = require('casper').create({
 });
 
 var fs = require('fs');
-var url = 'https://www.jobi.tn/#!/';
+var url = 'https://tanitjobs.com/search-results-jobs/';
 var jobs =[];
 var entreprises = [];
 var currentPage = 1;
@@ -24,43 +24,44 @@ function outputJSON (){
 
 	output.push({
 		jobs : jobs,
-		entreprises : entreprises
+	//	entreprises : entreprises
 	});
 	return JSON.stringify(output);
 };
 
 function startPageFn(){
-	var startPage=document.querySelector('li.waves-effect.hand.border.p-xs.bg-gray-soft');
+	var startPage=document.querySelector('.title_offre');
 	return Array.prototype.map.call(startPage,function(e){
 		return e.innerText;
 	});
 };
 
 function getJobs (){
-	var jobs = document.querySelectorAll('.firstchar a');
+	var jobs = document.querySelectorAll('.title_offre');
 	return Array.prototype.map.call(jobs,function(e){
 		return e.innerHTML;
 	});
 };
+/*
 function getEntreprises (){
 	var jobs = document.querySelectorAll('a .font-1-2.p-none.firstchar.m-none.hand.hand.font-light.m-b-md.dosis');
 	return Array.prototype.map.call(jobs,function(e){
 		return e.innerHTML;
 	});
-};
+};*/
 
 var processPage = function() {
 	
     
     jobs= this.evaluate (getJobs);
-    entreprises = this.evaluate (getEntreprises);
+   // entreprises = this.evaluate (getEntreprises);
     casper.wait(1000,function(){
         	console.log("waited 1 sec");
         });
  	//this.echo (jobs.length + 'jobs found:' );
     this.echo ('-'+ jobs.join('\n -'));
     //this.echo (entreprises.length + 'entreprises found:' );
-    this.echo ('-'+ entreprises.join('\n -'));
+   // this.echo ('-'+ entreprises.join('\n -'));
     
       var data = outputJSON();
 	fs.write ('data.json', data, "w");
